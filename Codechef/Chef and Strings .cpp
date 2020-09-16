@@ -5,18 +5,15 @@ int main(){
     int t;
     cin>>t;
     while(t--){
-        int n, arr[n], result=0;
+        int n;
         cin>> n;
-        for(int i = 0; i<n; i++){
-            cin>>arr[i];
-        }
-        for(int i = 0; i<n; i++){
-            if(i+1==n) continue;
-            else{
-                result += abs(arr[i]-arr[i+1])-1;
-                
-            }
-        }
+        
+        long long result=0;
+        long long int arr[n];
+        
+        for(int i = 0; i<n; i++) cin>>arr[i];
+        for(int i = 1; i<n; i++) result += abs(arr[i]-arr[i-1])-1;
+        
         cout<<result<<endl;
     }
 }   
