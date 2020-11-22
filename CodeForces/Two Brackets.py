@@ -1,4 +1,4 @@
-for _ in range(t):
+for _ in range(int(input())):
     s = input()
     a = 0
     b = 0
