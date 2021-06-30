@@ -1,0 +1,160 @@
+def traverse(graph, visited, curr, path, stack, n):
+    if curr==n-1:
+        path.append(stack.copy())
+        stack.pop()
+        return path, stack
+    else:
+        visited[curr] = 1
+        for ele in graph[curr]:
+            if visited[ele] == 0:
+                stack.append(ele)
+                path, stack = traverse(graph, visited, ele, path, stack, n)
+        stack.pop()
+        return path, stack 
+
+n, m, t, c = map(int, input().split()) 
+
+graph = [[] for _ in range(n)]
+visited = [0 for _ in range(n)] 
+
+for _ in range(m):
+    a,b = map(int, input().split())
+    graph[a-1].append(b-1)
+    graph[b-1].append(a-1) 
+
+path, _ = traverse(graph, visited, 0, [], [0], n) 
+
+path.sort(key=lambda x:len(x)) 
+
+# print(path) 
+
+tim = 0
+l = len(path[0])
+for i in range(1, l):
+    tim += c
+    if i==l-1:
+        break
+    else:
+        temp = tim//t
+        if temp%2==1:
+            tim = (temp+1)*t 
+
+print(tim)
+
+
+
+
+
+
+
+
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long int
+
+vector<int> g[1001];
+vector<pair<ll,vector<ll>>> pt;
+
+void dfs(ll st,ll e,ll vis[],vector<ll> rs,ll w){
+   rs.push_back(st);
+   if(st == e){
+       pt.push_back({w*(rs.size()-1),rs});
+       return;
+   }
+   for(auto u : g[st]){
+       if(vis[u] == 0){
+          vis[st] = 1;
+          dfs(u,e,vis,rs,w);
+          vis[st] = 0;
+       }
+   }
+}
+
+int main()
+{
+    ll n,m,t,c,u,v;
+    cin>>n>>m>>t>>c;
+    while(m--){
+        cin>>u>>v;
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
+    vector<ll> rs;
+    ll w = c;
+    ll vis[n+1] = {0};
+    dfs(1,n,vis,rs,w);
+    sort(pt.begin(),pt.end());
+    vector<ll> rt[n+1];
+    for(int i=0;i<pt.size();i++){
+        ll nes = pt[i].second.size();
+        for(auto u : pt[i].second){
+            rt[u].push_back(nes);
+        }
+    }
+    ll trt[n+1] = {0};
+    trt[1] = 1;
+    trt[n] = 1;
+    for(int i=2;i<=n-1;i++){
+        if(rt[i].size() > 0){
+            ll tm = rt[i][0];
+            ll up = upper_bound(rt[i].begin(),rt[i].end(),tm) - rt[i].begin();
+            trt[i] = up;
+        }
+    }
+    for(int i=1;i<=n;i++)
+    cout<<trt[i]<<" ";
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+def fun(d,st,en,l,c,t,ans,final,green,ch):
+    if ans//t>ch:
+        green=not green
+        ch+=1
+    if st==en:
+        final.append(ans)
+        return
+    for i in d[st]:
+        if str(i) not in l[:-1].split():
+            if green:
+                fun(d,i,en,l+str(i)+" ",c,t,ans+c,final,green,ch)
+            else:
+                aq=ans%t  
+                fun(d,i,en,l+str(i)+" ",c,t,ans+c+t-aq,final,not green,ch)
+    return
+        
+n,m,t,c=map(int,input().split())
+d={}
+for i in range(m):
+    u,v=map(int,input().split())
+    if u in d:
+        d[u].append(v)
+    else:
+        d[u]=[v]
+    if v in d:
+        d[v].append(u)
+    else:
+        d[v]=[u]
+l="1 "
+final=[]
+green=True
+ch=0
+ret=fun(d,1,n,l,c,t,0,final,green,ch)
+final=set(final)
+final=list(final)
+final.sort()
+if len(final)>1:
+    print(final[1])
+else:
+    print(-1)
